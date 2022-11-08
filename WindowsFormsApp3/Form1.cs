@@ -16,6 +16,40 @@ namespace WindowsFormsApp3
         bool isBuilding = false;
         long iterationCount;
         int randomSeed;
+        List<Dice> diceList;
+
+        private long getIterationCount()
+        {
+            try
+            {
+                string tmpText = textBox2.Text.Replace('.', ',');
+                double tmp = Convert.ToDouble(tmpText);
+                if (tmp < 0 || tmp >3)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                if (tmp >= 1)
+                {
+                    return Convert.ToInt64(10000 * Math.Pow(10, tmp) + 20);
+                } else
+                {
+                    return Convert.ToInt64(100000 * tmp + 20);
+                } 
+            } catch
+            {
+                return 0;
+            }
+        }
+        private void buildRandom()
+        {
+            iterationCount = getIterationCount();
+            if (iterationCount != 0)
+            {
+                randomSeed = DateTime.UtcNow.Millisecond;
+                isBuilding = true;
+                build(zedGraphControl1);
+            }
+        }
 
         private void Clear(ZedGraphControl Zed_GraphControl)
         {
@@ -40,7 +74,6 @@ namespace WindowsFormsApp3
             PointPairList points = dices.getRandomScheme();
             PointPairList pointsMoreThen = dices.getMoreThenRandomScheme();
 
-
             Clear(zedGraphControl1);
             GraphPane my_Pane = Zed_GraphControl.GraphPane;
             LineItem myCircle1 = my_Pane.AddCurve("Значение", points, Color.Blue, SymbolType.Circle);
@@ -52,39 +85,17 @@ namespace WindowsFormsApp3
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
             if (!isBuilding) return;
-            try { iterationCount = Convert.ToInt64(textBox2.Text);
-                build(zedGraphControl1); return;
-            }
-            catch { return; }
-        }
 
-        private void textBox3_TextChanged(object sender, EventArgs e)
-        {
-            if (!isBuilding) return;
-            try
+            iterationCount = getIterationCount();
+            if (iterationCount != 0)
             {
-                randomSeed = Convert.ToInt32(textBox3.Text);
-                build(zedGraphControl1); return;
+                build(zedGraphControl1);
             }
-            catch { return; }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            try
-            {
-                iterationCount = Convert.ToInt64(textBox2.Text);
-                randomSeed = Convert.ToInt32(textBox3.Text);
-                isBuilding = true;
-                build(zedGraphControl1);
-                return;
-            }
-            catch { return; }
-        }
-
-        private void OnLoad(object sender, EventArgs e)
-        {
-            
+            buildRandom();
         }
 
         public Form1()
@@ -115,18 +126,9 @@ namespace WindowsFormsApp3
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void Form1_Load_1(object sender, EventArgs e)
         {
-            iterationCount = Convert.ToInt64(textBox2.Text);
-            randomSeed = Convert.ToInt32(textBox3.Text);
-            isBuilding = true;
-            build(zedGraphControl1);
-            return;
+            buildRandom();
         }
     }
 }
