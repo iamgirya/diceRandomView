@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ZedGraph;
 
-namespace WindowsFormsApp3
+namespace DiceRandomView
 {
     public partial class Form1 : Form
     {
@@ -125,7 +125,10 @@ namespace WindowsFormsApp3
 
         private void Form1_Load_1(object sender, EventArgs e)
         {
-            dicesBuilder = new DiceHandBuilder(iterationCount, new DiceHand());
+            dicesBuilder = new DiceHandBuilder(getIterationCount(), new DiceHand());
+            zedGraphControl1.GraphPane.Title.Text = "Вероятности";
+            zedGraphControl1.GraphPane.XAxis.Title.Text = "Значение суммы";
+            zedGraphControl1.GraphPane.YAxis.Title.Text = "Шанс";
             buildRandom();
         }
 

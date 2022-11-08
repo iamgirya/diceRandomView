@@ -5,21 +5,35 @@ using System.Text;
 using System.Threading.Tasks;
 using ZedGraph;
 
-namespace WindowsFormsApp3
+namespace DiceRandomView
 {
-    class Dice
+    public class Dice
     {
         int value;
         int count;
         bool isExplousion;
         bool isEnemy;
         
-        public Dice(int value, bool isExplousion = false, int count = 1, bool isEnemy = false, bool isNeedTwoMax = false)
+        public Dice(int value, bool isExplousion = false, int count = 1, bool isEnemy = false)
         {
             this.value = value;
             this.isExplousion = isExplousion;
             this.count = count;
             this.isEnemy = isEnemy;
+        }
+
+        public new string ToString()
+        {
+            string tmp = count + "d" + value + "; ";
+            if (isExplousion)
+            {
+                tmp += "взрывается; ";
+            }
+            if (isEnemy)
+            {
+                tmp += "отрицательный; ";
+            }
+            return tmp;
         }
 
         public List<long> Roll(Random rand)
@@ -40,6 +54,10 @@ namespace WindowsFormsApp3
                         oneDiceSum += tmp;
                     }
                 }
+                if (isEnemy)
+                {
+                    oneDiceSum = -oneDiceSum;
+                }
                 rezult.Add(oneDiceSum);
             }
 
@@ -47,64 +65,9 @@ namespace WindowsFormsApp3
         }
     }
 
-    class FateDice : Dice
-    {
-        int value;
-        int count;
-        bool isExplousion;
-        bool isNeedTwoMax;
-        bool isEnemy;
-
-        public FateDice(bool isExplousion = false, int count = 1, bool isEnemy = false, bool isNeedTwoMax = false) : base(0, isExplousion, count, isEnemy, isNeedTwoMax)
-        {
-            
-        }
-
-        public new long Roll(Random rand)
-        {
-            List<long> rezult = new List<long>();
-
-            for (int i = 1; i <= count; i++)
-            {
-
-                long tmp = rand.Next(0, 1 + 1);
-                long oneDiceSum = tmp;
-
-                if (isExplousion && tmp == value)
-                {
-                    while (tmp == value)
-                    {
-                        tmp = rand.Next(0, 1 + 1);
-                        oneDiceSum += tmp;
-                    }
-                }
-                rezult.Add(oneDiceSum);
-            }
-
-            long sum = 0;
-            if (isNeedTwoMax)
-            {
-                long tmp = rezult.Max();
-                sum += rezult.Max();
-                rezult.Remove(tmp);
-                sum += rezult.Max();
-                rezult.Add(tmp);
-            }
-            else
-            {
-                for (int i = 0; i < rezult.Count; i++)
-                {
-                    sum += rezult[i];
-                }
-            }
-
-            return sum;
-        }
-    }
-
     public class DiceHand
     {
-        List<Dice> diceHand;
+        public List<Dice> diceHand;
         Random rand;
         public long bonus;
         public int needCount;
@@ -142,7 +105,7 @@ namespace WindowsFormsApp3
 
                 for (int i = 0; i < diceHand.Count; i++)
                 {
-                    rezult.Concat<long>(diceHand[i].Roll(rand));
+                    rezult.AddRange(diceHand[i].Roll(rand));
                 }
 
                 //бонус
@@ -171,24 +134,9 @@ namespace WindowsFormsApp3
 
         private long rollProgramm()
         {
-            // вписать значения
             long sum = 0;
-            int tmp;
-            //tmp = rand.Next(1, 6+1);
-            //if (tmp % 2 == 1)
-            //{
-            //    tmp = -tmp;
-            //}
-            //sum += tmp;
-            //tmp = rand.Next(1, 6 + 1);
-            //if (tmp % 2 == 1)
-            //{
-            //    tmp = -tmp;
-            //}
-            //sum += tmp;
 
-            sum += new Dice(4, true, 8, true, true).Roll(rand)[0];
-            sum += new Dice(12, true, 2, false, true).Roll(rand)[0];
+            sum += new Dice(6, false, 3, false).Roll(rand).Sum();
 
             return sum;
         }
