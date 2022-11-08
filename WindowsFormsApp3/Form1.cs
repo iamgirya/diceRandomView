@@ -14,7 +14,6 @@ namespace DiceRandomView
     public partial class Form1 : Form
     {
         bool isBuilding = false;
-        long iterationCount;
         DiceHandBuilder dicesBuilder;
 
         private long getIterationCount()
@@ -41,10 +40,11 @@ namespace DiceRandomView
         }
         private void buildRandom()
         {
-            iterationCount = getIterationCount();
+            long iterationCount = getIterationCount();
             if (iterationCount != 0)
             {
                 isBuilding = true;
+                dicesBuilder.iterCount = iterationCount;
                 build(zedGraphControl1);
             }
         }
@@ -83,9 +83,10 @@ namespace DiceRandomView
         {
             if (!isBuilding) return;
 
-            iterationCount = getIterationCount();
+            long iterationCount = getIterationCount();
             if (iterationCount != 0)
             {
+                dicesBuilder.iterCount = iterationCount;
                 build(zedGraphControl1);
             }
         }

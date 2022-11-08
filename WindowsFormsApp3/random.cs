@@ -145,7 +145,7 @@ namespace DiceRandomView
     class DiceHandBuilder
     {
         Random rand;
-        long iterCount;
+        public long iterCount;
         public DiceHand diceHand;
         public DiceHandBuilder(long i)
         {
