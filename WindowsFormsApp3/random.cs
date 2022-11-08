@@ -12,7 +12,6 @@ namespace WindowsFormsApp3
         int value;
         int count;
         bool isExplousion;
-        bool isNeedTwoMax;
         bool isEnemy;
         
         public Dice(int value, bool isExplousion = false, int count = 1, bool isEnemy = false, bool isNeedTwoMax = false)
@@ -20,11 +19,10 @@ namespace WindowsFormsApp3
             this.value = value;
             this.isExplousion = isExplousion;
             this.count = count;
-            this.isNeedTwoMax = isNeedTwoMax;
             this.isEnemy = isEnemy;
         }
 
-        public long Roll(Random rand)
+        public List<long> Roll(Random rand)
         {
             List<long> rezult = new List<long>();
 
@@ -45,24 +43,7 @@ namespace WindowsFormsApp3
                 rezult.Add(oneDiceSum);
             }
 
-            long sum = 0;
-            if (isNeedTwoMax)
-            {
-                long tmp = rezult.Max();
-                sum += rezult.Max();
-                rezult.Remove(tmp);
-                sum += rezult.Max();
-                rezult.Add(tmp);
-            }
-            else
-            {
-                for (int i = 0; i < rezult.Count; i++)
-                {
-                    sum += rezult[i];
-                }
-            }
-
-            return sum;
+            return rezult;
         }
     }
 
@@ -120,39 +101,72 @@ namespace WindowsFormsApp3
             return sum;
         }
     }
-    class DiceRandom
+
+    public class DiceHand
     {
-        Random rand;
-        long iterCount;
         List<Dice> diceHand;
-        public DiceRandom(int r, long i)
+        Random rand;
+        public long bonus;
+        public int needCount;
+        public double mult;
+
+        public DiceHand(long bonus = 0, double mult = 1, int needCount = 0)
         {
-            this.rand = new Random(r);
-            this.iterCount = i;
+            rand = new Random(DateTime.UtcNow.Millisecond);
+            this.bonus = bonus;
+            this.diceHand = new List<Dice>();
+            this.needCount = needCount;
+            this.mult = mult;
         }
 
-        public DiceRandom(int r, long i, List<Dice> diceHand)
+        private long takeMaxDices(int lastDice, List<long> rezult)
         {
-            this.diceHand = diceHand;
-            this.rand = new Random(r);
-            this.iterCount = i;
+            if (rezult.Count == 0 || lastDice == 0)
+            {
+                return 0;
+            }
+            
+            long nowMax = rezult.Max();
+            rezult.Remove(nowMax);
+            long tmp = takeMaxDices(lastDice - 1, rezult);
+            rezult.Add(nowMax);
+
+            return tmp + nowMax;
         }
 
-        private long rollDices()
+        public long rollDices()
         {
             if (diceHand.Count != 0)
             {
-                long sum = 0;
+                List<long> rezult = new List<long>();
+
                 for (int i = 0; i < diceHand.Count; i++)
                 {
-                    sum += diceHand[i].Roll(rand);
+                    rezult.Concat<long>(diceHand[i].Roll(rand));
                 }
+
+                //бонус
+                long sum = bonus;
+                
+                //ограниченное число кубов
+                if (needCount != 0)
+                {
+                    sum += takeMaxDices(needCount, rezult);
+                } else
+                {
+                    sum += rezult.Sum();
+                }
+
+                //умножение
+                sum = Convert.ToInt64(sum * mult);
+
                 return sum;
-            } else
+            }
+            else
             {
                 return rollProgramm();
             }
-            
+
         }
 
         private long rollProgramm()
@@ -173,10 +187,28 @@ namespace WindowsFormsApp3
             //}
             //sum += tmp;
 
-            sum += new Dice(4, true, 8, true, true).Roll(rand);
-            sum += new Dice(12, true, 2, false, true).Roll(rand);
+            sum += new Dice(4, true, 8, true, true).Roll(rand)[0];
+            sum += new Dice(12, true, 2, false, true).Roll(rand)[0];
 
             return sum;
+        }
+    }
+
+    class DiceHandBuilder
+    {
+        Random rand;
+        long iterCount;
+        public DiceHand diceHand;
+        public DiceHandBuilder(long i)
+        {
+            this.diceHand = new DiceHand();
+            this.iterCount = i;
+        }
+
+        public DiceHandBuilder(long i, DiceHand diceHand)
+        {
+            this.diceHand = diceHand;
+            this.iterCount = i;
         }
 
         public PointPairList getRandomScheme()
@@ -186,7 +218,7 @@ namespace WindowsFormsApp3
             Dictionary<long, double> scheme = new Dictionary<long, double>();
             for (long i = 1; i <= iterCount; i++)
             {
-                long tmp = rollDices();
+                long tmp = diceHand.rollDices();
                 if (scheme.ContainsKey(tmp))
                 {
                     scheme[tmp] += 1.0;
@@ -214,7 +246,7 @@ namespace WindowsFormsApp3
             Dictionary<long, double> scheme = new Dictionary<long, double>();
             for (long i = 1; i <= iterCount; i++)
             {
-                long tmp = rollDices();
+                long tmp = diceHand.rollDices();
                 if (scheme.ContainsKey(tmp))
                 {
                     scheme[tmp] += 1.0;

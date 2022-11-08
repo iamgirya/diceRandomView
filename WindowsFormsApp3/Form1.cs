@@ -15,8 +15,7 @@ namespace WindowsFormsApp3
     {
         bool isBuilding = false;
         long iterationCount;
-        int randomSeed;
-        List<Dice> diceList;
+        DiceHandBuilder dicesBuilder;
 
         private long getIterationCount()
         {
@@ -45,7 +44,6 @@ namespace WindowsFormsApp3
             iterationCount = getIterationCount();
             if (iterationCount != 0)
             {
-                randomSeed = DateTime.UtcNow.Millisecond;
                 isBuilding = true;
                 build(zedGraphControl1);
             }
@@ -70,9 +68,8 @@ namespace WindowsFormsApp3
 
         public void build(ZedGraphControl Zed_GraphControl)
         {
-            DiceRandom dices = new DiceRandom(randomSeed, iterationCount);
-            PointPairList points = dices.getRandomScheme();
-            PointPairList pointsMoreThen = dices.getMoreThenRandomScheme();
+            PointPairList points = dicesBuilder.getRandomScheme();
+            PointPairList pointsMoreThen = dicesBuilder.getMoreThenRandomScheme();
 
             Clear(zedGraphControl1);
             GraphPane my_Pane = Zed_GraphControl.GraphPane;
@@ -128,7 +125,16 @@ namespace WindowsFormsApp3
 
         private void Form1_Load_1(object sender, EventArgs e)
         {
+            dicesBuilder = new DiceHandBuilder(iterationCount, new DiceHand());
             buildRandom();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Form2 embeddedForm = new Form2(dicesBuilder.diceHand);
+            
+            embeddedForm.ShowDialog();
+            
         }
     }
 }
