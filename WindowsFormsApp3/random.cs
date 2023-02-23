@@ -71,14 +71,16 @@ namespace DiceRandomView
         Random rand;
         public long bonus;
         public int needCount;
+        public int needRezultForSucess;
         public double mult;
 
-        public DiceHand(long bonus = 0, double mult = 1, int needCount = 0)
+        public DiceHand(long bonus = 0, double mult = 1, int needCount = 0, int needRezultForSucess = int.MaxValue)
         {
             rand = new Random(DateTime.UtcNow.Millisecond);
             this.bonus = bonus;
             this.diceHand = new List<Dice>();
             this.needCount = needCount;
+            this.needRezultForSucess = needRezultForSucess;
             this.mult = mult;
         }
 
@@ -117,7 +119,19 @@ namespace DiceRandomView
                     sum += takeMaxDices(needCount, rezult);
                 } else
                 {
-                    sum += rezult.Sum();
+                    if (needRezultForSucess != int.MaxValue)
+                    {
+                        foreach (int rez in rezult) {
+                            if (rez >= needRezultForSucess)
+                            {
+                                sum += 1;
+                            }
+                        }
+                    } else
+                    {
+                        sum += rezult.Sum();
+                    }
+                    
                 }
 
                 //умножение
@@ -136,7 +150,9 @@ namespace DiceRandomView
         {
             long sum = 0;
 
-            sum += new Dice(6, false, 3, false).Roll(rand).Sum();
+            sum += new Dice(10, true, 1, false).Roll(rand).Sum() >= 4 ? 1 : 0;
+            sum += new Dice(10, true, 1, false).Roll(rand).Sum() >= 4 ? 1 : 0;
+            sum += new Dice(10, true, 1, false).Roll(rand).Sum() >= 4 ? 1 : 0;
 
             return sum;
         }

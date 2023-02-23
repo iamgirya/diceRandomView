@@ -73,8 +73,8 @@ namespace DiceRandomView
 
             Clear(zedGraphControl1);
             GraphPane my_Pane = Zed_GraphControl.GraphPane;
-            LineItem myCircle1 = my_Pane.AddCurve("Значение", points, Color.Blue, SymbolType.Circle);
-            LineItem myCircle2 = my_Pane.AddCurve("Больше чем", pointsMoreThen, Color.Red, SymbolType.Circle);
+            LineItem myCircle1 = my_Pane.AddCurve("Вероятность, что выпадет Х значение", points, Color.Blue, SymbolType.Circle);
+            LineItem myCircle2 = my_Pane.AddCurve("Вероятность, что значение будет больше или равно Х", pointsMoreThen, Color.Red, SymbolType.Circle);
             zedGraphControl1.AxisChange();
             zedGraphControl1.Invalidate();
         }

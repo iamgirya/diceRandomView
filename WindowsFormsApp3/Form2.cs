@@ -54,6 +54,10 @@ namespace DiceRandomView
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
             textBox3.Enabled = checkBox3.Checked;
+            if (checkBox3.Checked)
+            {
+                checkBox4.Checked = false;
+            }
             if (textBox3.Enabled)
             {
                 try
@@ -107,6 +111,52 @@ namespace DiceRandomView
             {
                 DiceList.Items.Add(diceHand.diceHand[i].ToString());
             }
+            if (diceHand.needRezultForSucess != Int32.MaxValue)
+            {
+                textBox6.Enabled = true;
+                textBox6.Text = diceHand.needRezultForSucess.ToString();
+                checkBox4.Checked = true;
+            }
+            if (diceHand.needCount != 0)
+            {
+                textBox3.Enabled = true;
+                textBox3.Text = diceHand.needRezultForSucess.ToString();
+                checkBox3.Checked = true;
+            }
+            textBox4.Text = diceHand.bonus.ToString();
+            textBox5.Text = diceHand.mult.ToString();
+
+        }
+
+        private void checkBox4_CheckedChanged(object sender, EventArgs e)
+        {
+            textBox6.Enabled = checkBox4.Checked;
+            if (checkBox4.Checked)
+            {
+                checkBox3.Checked = false;
+            }
+            if (textBox6.Enabled)
+            {
+                try
+                {
+                    diceHand.needRezultForSucess = Convert.ToInt32(textBox6.Text);
+                }
+                catch { }
+            }
+            else
+            {
+                diceHand.needRezultForSucess = Int32.MaxValue;
+            }
+        }
+
+        private void textBox6_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                diceHand.needRezultForSucess = Convert.ToInt32(textBox6.Text);
+            }
+            catch
+            { }
         }
     }
 }
