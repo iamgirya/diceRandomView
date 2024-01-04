@@ -48,6 +48,7 @@ namespace DiceRandomView
             this.label7 = new System.Windows.Forms.Label();
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.count_of_coincidences_box = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // DiceList
@@ -117,7 +118,7 @@ namespace DiceRandomView
             // 
             this.checkBox3.AutoSize = true;
             this.checkBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBox3.Location = new System.Drawing.Point(586, 32);
+            this.checkBox3.Location = new System.Drawing.Point(586, 63);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(206, 24);
             this.checkBox3.TabIndex = 6;
@@ -159,7 +160,7 @@ namespace DiceRandomView
             // 
             this.textBox3.Enabled = false;
             this.textBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox3.Location = new System.Drawing.Point(586, 62);
+            this.textBox3.Location = new System.Drawing.Point(586, 93);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(202, 27);
             this.textBox3.TabIndex = 11;
@@ -170,7 +171,7 @@ namespace DiceRandomView
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label4.Location = new System.Drawing.Point(581, 155);
+            this.label4.Location = new System.Drawing.Point(581, 186);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(58, 20);
             this.label4.TabIndex = 13;
@@ -179,7 +180,7 @@ namespace DiceRandomView
             // textBox4
             // 
             this.textBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox4.Location = new System.Drawing.Point(585, 180);
+            this.textBox4.Location = new System.Drawing.Point(585, 211);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(100, 27);
             this.textBox4.TabIndex = 12;
@@ -190,7 +191,7 @@ namespace DiceRandomView
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label5.Location = new System.Drawing.Point(687, 155);
+            this.label5.Location = new System.Drawing.Point(687, 186);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(105, 20);
             this.label5.TabIndex = 15;
@@ -199,7 +200,7 @@ namespace DiceRandomView
             // textBox5
             // 
             this.textBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox5.Location = new System.Drawing.Point(691, 180);
+            this.textBox5.Location = new System.Drawing.Point(691, 211);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(100, 27);
             this.textBox5.TabIndex = 14;
@@ -230,7 +231,7 @@ namespace DiceRandomView
             // 
             this.textBox6.Enabled = false;
             this.textBox6.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox6.Location = new System.Drawing.Point(586, 125);
+            this.textBox6.Location = new System.Drawing.Point(586, 156);
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(202, 27);
             this.textBox6.TabIndex = 19;
@@ -241,7 +242,7 @@ namespace DiceRandomView
             // 
             this.checkBox4.AutoSize = true;
             this.checkBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBox4.Location = new System.Drawing.Point(586, 95);
+            this.checkBox4.Location = new System.Drawing.Point(586, 126);
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(197, 24);
             this.checkBox4.TabIndex = 18;
@@ -249,11 +250,24 @@ namespace DiceRandomView
             this.checkBox4.UseVisualStyleBackColor = true;
             this.checkBox4.CheckedChanged += new System.EventHandler(this.checkBox4_CheckedChanged);
             // 
+            // count_of_coincidences_box
+            // 
+            this.count_of_coincidences_box.AutoSize = true;
+            this.count_of_coincidences_box.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.count_of_coincidences_box.Location = new System.Drawing.Point(586, 33);
+            this.count_of_coincidences_box.Name = "count_of_coincidences_box";
+            this.count_of_coincidences_box.Size = new System.Drawing.Size(194, 24);
+            this.count_of_coincidences_box.TabIndex = 20;
+            this.count_of_coincidences_box.Text = "Кол-во совпадений";
+            this.count_of_coincidences_box.UseVisualStyleBackColor = true;
+            this.count_of_coincidences_box.CheckedChanged += new System.EventHandler(this.count_of_coincidences_box_CheckedChanged);
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.count_of_coincidences_box);
             this.Controls.Add(this.textBox6);
             this.Controls.Add(this.checkBox4);
             this.Controls.Add(this.label7);
@@ -302,5 +316,6 @@ namespace DiceRandomView
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.CheckBox checkBox4;
+        private System.Windows.Forms.CheckBox count_of_coincidences_box;
     }
 }

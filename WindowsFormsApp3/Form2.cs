@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DiceRandomView
@@ -38,7 +32,8 @@ namespace DiceRandomView
             try
             {
                 diceHand.bonus = Convert.ToInt64(textBox4.Text);
-            } catch { }
+            }
+            catch { }
         }
 
         private void textBox5_TextChanged(object sender, EventArgs e)
@@ -53,19 +48,16 @@ namespace DiceRandomView
 
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
-            textBox3.Enabled = checkBox3.Checked;
+            chooseHandMode(1, checkBox3.Checked);
             if (checkBox3.Checked)
-            {
-                checkBox4.Checked = false;
-            }
-            if (textBox3.Enabled)
             {
                 try
                 {
                     diceHand.needCount = Convert.ToInt32(textBox3.Text);
                 }
                 catch { }
-            } else
+            }
+            else
             {
                 diceHand.needCount = 0;
             }
@@ -77,7 +69,7 @@ namespace DiceRandomView
             {
                 diceHand.needCount = Convert.ToInt32(textBox3.Text);
             }
-            catch 
+            catch
             { }
         }
 
@@ -92,9 +84,9 @@ namespace DiceRandomView
                 }
 
                 Dice newDice = new Dice(Convert.ToInt32(textBox1.Text), checkBox1.Checked, Convert.ToInt32(textBox2.Text), checkBox2.Checked);
-                
+
                 diceHand.diceHand.Add(newDice);
-                
+
                 DiceList.Items.Add(newDice.ToString());
                 label7.Text = "";
             }
@@ -130,12 +122,8 @@ namespace DiceRandomView
 
         private void checkBox4_CheckedChanged(object sender, EventArgs e)
         {
-            textBox6.Enabled = checkBox4.Checked;
+            chooseHandMode(2, checkBox4.Checked);
             if (checkBox4.Checked)
-            {
-                checkBox3.Checked = false;
-            }
-            if (textBox6.Enabled)
             {
                 try
                 {
@@ -149,6 +137,38 @@ namespace DiceRandomView
             }
         }
 
+        private void chooseHandMode(int mode, bool checkState)
+        {
+            List<CheckBox> modeChecks = new List<CheckBox>() { checkBox3, checkBox4, count_of_coincidences_box };
+            List<TextBox> modeInputs = new List<TextBox>() { textBox3, textBox6, null };
+            for (int i = 0; i < modeChecks.Count; i++)
+            {
+                if (i != mode - 1)
+                {
+                    modeChecks[i].Checked = false;
+                    if (modeInputs[i] != null)
+                    {
+                        modeInputs[i].Enabled = false;
+                    }
+                }
+                else
+                {
+                    modeChecks[i].Checked = checkState;
+                    if (modeInputs[i] != null)
+                    {
+                        modeInputs[i].Enabled = checkState;
+                    }
+
+                }
+            }
+        }
+
+        private void count_of_coincidences_box_CheckedChanged(object sender, EventArgs e)
+        {
+            chooseHandMode(3, count_of_coincidences_box.Checked);
+            diceHand.calculateCoincidences = count_of_coincidences_box.Checked;
+        }
+
         private void textBox6_TextChanged(object sender, EventArgs e)
         {
             try
@@ -158,5 +178,7 @@ namespace DiceRandomView
             catch
             { }
         }
+
+
     }
 }

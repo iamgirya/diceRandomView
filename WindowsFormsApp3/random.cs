@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ZedGraph;
 
 namespace DiceRandomView
@@ -13,7 +12,7 @@ namespace DiceRandomView
         int count;
         bool isExplousion;
         bool isEnemy;
-        
+
         public Dice(int value, bool isExplousion = false, int count = 1, bool isEnemy = false)
         {
             this.value = value;
@@ -72,9 +71,10 @@ namespace DiceRandomView
         public long bonus;
         public int needCount;
         public int needRezultForSucess;
+        public bool calculateCoincidences = false;
         public double mult;
 
-        public DiceHand(long bonus = 0, double mult = 1, int needCount = 0, int needRezultForSucess = int.MaxValue)
+        public DiceHand(long bonus = 0, double mult = 1, int needCount = 0, int needRezultForSucess = int.MaxValue, bool calculateCoincidences = false)
         {
             rand = new Random(DateTime.UtcNow.Millisecond);
             this.bonus = bonus;
@@ -82,6 +82,7 @@ namespace DiceRandomView
             this.needCount = needCount;
             this.needRezultForSucess = needRezultForSucess;
             this.mult = mult;
+            this.calculateCoincidences = calculateCoincidences;
         }
 
         private long takeMaxDices(int lastDice, List<long> rezult)
@@ -90,7 +91,7 @@ namespace DiceRandomView
             {
                 return 0;
             }
-            
+
             long nowMax = rezult.Max();
             rezult.Remove(nowMax);
             long tmp = takeMaxDices(lastDice - 1, rezult);
@@ -112,26 +113,62 @@ namespace DiceRandomView
 
                 //бонус
                 long sum = bonus;
-                
+
                 //ограниченное число кубов
                 if (needCount != 0)
                 {
                     sum += takeMaxDices(needCount, rezult);
-                } else
+                }
+                else if (needRezultForSucess != int.MaxValue)
                 {
-                    if (needRezultForSucess != int.MaxValue)
+                    foreach (int rez in rezult)
                     {
-                        foreach (int rez in rezult) {
-                            if (rez >= needRezultForSucess)
+                        if (rez >= needRezultForSucess)
+                        {
+                            sum += 1;
+                        }
+                    }
+                }
+                else if (calculateCoincidences)
+                {
+                    List<bool> checkedRezult = Enumerable.Repeat(true, rezult.Count).ToList();
+                    Dictionary<long, int> valuesCount = new Dictionary<long, int>();    
+                    for (int i = 0; i < rezult.Count; i++)
+                    {
+                        if (checkedRezult[i])
+                        {
+                            checkedRezult[i] = false;
+                            for (int j = i+1; j < rezult.Count; j++)
                             {
-                                sum += 1;
+                                if (checkedRezult[j] && rezult[i] == rezult[j])
+                                {
+                                    checkedRezult[j] = false;
+                                    if (valuesCount.ContainsKey(rezult[i]))
+                                    {
+                                        valuesCount[rezult[i]] += 1;
+
+                                    }
+                                    else
+                                    {
+                                        valuesCount[rezult[i]] = 1;
+                                    }
+                                }
                             }
                         }
-                    } else
-                    {
-                        sum += rezult.Sum();
                     }
-                    
+                    if (valuesCount.Count != 0)
+                    {
+                        int maxVal = 0;
+                        foreach (var item in valuesCount)
+                        {
+                            maxVal = item.Value > maxVal ? item.Value : maxVal;
+                        }
+                        sum += maxVal;
+                    }
+                }
+                else
+                {
+                    sum += rezult.Sum();
                 }
 
                 //умножение
@@ -186,16 +223,17 @@ namespace DiceRandomView
                 if (scheme.ContainsKey(tmp))
                 {
                     scheme[tmp] += 1.0;
-                } 
+                }
                 else
                 {
                     scheme.Add(tmp, 1);
                 }
-                
+
             }
 
-            foreach (var i in scheme) {
-                points.Add(i.Key, i.Value / iterCount*100);
+            foreach (var i in scheme)
+            {
+                points.Add(i.Key, i.Value / iterCount * 100);
             }
             points.Sort();
 

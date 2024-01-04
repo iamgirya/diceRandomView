@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ZedGraph;
 
@@ -22,18 +16,20 @@ namespace DiceRandomView
             {
                 string tmpText = textBox2.Text.Replace('.', ',');
                 double tmp = Convert.ToDouble(tmpText);
-                if (tmp < 0 || tmp >3)
+                if (tmp < 0 || tmp > 3)
                 {
                     throw new ArgumentOutOfRangeException();
                 }
                 if (tmp >= 1)
                 {
                     return Convert.ToInt64(10000 * Math.Pow(10, tmp) + 20);
-                } else
+                }
+                else
                 {
                     return Convert.ToInt64(100000 * tmp + 20);
-                } 
-            } catch
+                }
+            }
+            catch
             {
                 return 0;
             }
@@ -119,7 +115,7 @@ namespace DiceRandomView
 
             if (result)
             {
-                textBox5.Text = "x: "+curve[index].X.ToString();
+                textBox5.Text = "x: " + curve[index].X.ToString();
                 textBox6.Text = "y: " + curve[index].Y.ToString();
             }
         }
@@ -136,9 +132,9 @@ namespace DiceRandomView
         private void button2_Click(object sender, EventArgs e)
         {
             Form2 embeddedForm = new Form2(dicesBuilder.diceHand);
-            
+
             embeddedForm.ShowDialog();
-            
+
         }
     }
 }
